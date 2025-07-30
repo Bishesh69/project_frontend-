@@ -1,0 +1,8 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Disallow: /admin
+Disallow: /api
+Disallow: /quiz/results
+Disallow: /profile
+
+Sitemap: https://adaptiveexam.com/sitemap.xml
