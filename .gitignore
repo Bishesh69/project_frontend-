@@ -42,8 +42,12 @@ jspm_packages/
 # Yarn Integrity file
 .yarn-integrity
 
-# Frontend build (deploy separately)
-frontend/
+# Build directories for all apps
+frontend/build/
+frontend/dist/
+admin/build/
+admin/dist/
+backend/dist/
 
 # IDE files
 .vscode/

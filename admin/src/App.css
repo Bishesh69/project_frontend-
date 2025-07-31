@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.App {
+  text-align: center;
+}
+
+.sidebar {
+  @apply bg-gray-800 text-white w-64 min-h-screen p-4;
+}
+
+.sidebar-item {
+  @apply block py-2 px-4 rounded hover:bg-gray-700 transition-colors;
+}
+
+.sidebar-item.active {
+  @apply bg-blue-600;
+}
+
+.header {
+  @apply bg-white shadow-sm border-b border-gray-200 px-6 py-4;
+}
+
+.card {
+  @apply bg-white rounded-lg shadow p-6;
+}
+
+.btn-primary {
+  @apply bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded;
+}
+
+.btn-secondary {
+  @apply bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded;
+}
+
+.btn-danger {
+  @apply bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded;
+}
