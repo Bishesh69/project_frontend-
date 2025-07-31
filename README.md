@@ -84,12 +84,12 @@ PORT=5000
 
 ### Frontend (.env)
 ```
-REACT_APP_API_URL=http://localhost:5000/api
+REACT_APP_API_URL=https://project-backend-5f4r.onrender.com/api
 ```
 
 ### Admin (.env)
 ```
-REACT_APP_API_URL=http://localhost:5000/api
+REACT_APP_API_URL=https://project-backend-5f4r.onrender.com/api
 ```
 
 ## 🔐 Admin Access
