@@ -1,6 +1,32 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { adminAnalyticsAPI } from '../services/api';
 
 const Dashboard = () => {
+  const [stats, setStats] = useState({
+    totalUsers: 0,
+    totalQuizzes: 0,
+    totalAttempts: 0,
+    averageScore: 0
+  });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    fetchDashboardStats();
+  }, []);
+
+  const fetchDashboardStats = async () => {
+    try {
+      setLoading(true);
+      const response = await adminAnalyticsAPI.getDashboardStats();
+      setStats(response.data);
+    } catch (error) {
+      setError('Failed to fetch dashboard statistics');
+      console.error('Error fetching dashboard stats:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <div className="space-y-6">
       <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>

@@ -1,12 +1,54 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { adminUserAPI } from '../services/api';
 
 const UserManagement = () => {
-  const [users] = useState([
-    { id: 1, name: 'John Doe', email: 'john@example.com', role: 'User', status: 'Active', joinDate: '2024-01-15' },
-    { id: 2, name: 'Jane Smith', email: 'jane@example.com', role: 'User', status: 'Active', joinDate: '2024-01-20' },
-    { id: 3, name: 'Bob Johnson', email: 'bob@example.com', role: 'User', status: 'Inactive', joinDate: '2024-01-10' },
-    { id: 4, name: 'Alice Brown', email: 'alice@example.com', role: 'Moderator', status: 'Active', joinDate: '2024-01-25' },
-  ]);
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [filters, setFilters] = useState({
+    search: '',
+    role: '',
+    status: ''
+  });
+
+  useEffect(() => {
+    fetchUsers();
+  }, [filters]);
+
+  const fetchUsers = async () => {
+    try {
+      setLoading(true);
+      const response = await adminUserAPI.getAllUsers(filters);
+      setUsers(response.data.users || []);
+    } catch (error) {
+      setError('Failed to fetch users');
+      console.error('Error fetching users:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleUserAction = async (userId, action) => {
+    try {
+      switch (action) {
+        case 'ban':
+          await adminUserAPI.banUser(userId);
+          break;
+        case 'unban':
+          await adminUserAPI.unbanUser(userId);
+          break;
+        case 'delete':
+          await adminUserAPI.deleteUser(userId);
+          break;
+        default:
+          return;
+      }
+      fetchUsers(); // Refresh the list
+    } catch (error) {
+      setError(`Failed to ${action} user`);
+      console.error(`Error ${action} user:`, error);
+    }
+  };
 
   return (
     <div className="space-y-6">

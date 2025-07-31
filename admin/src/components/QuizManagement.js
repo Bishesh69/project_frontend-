@@ -1,12 +1,55 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { adminQuizAPI } from '../services/api';
 
 const QuizManagement = () => {
-  const [quizzes] = useState([
-    { id: 1, title: 'JavaScript Basics', category: 'Programming', questions: 20, difficulty: 'Beginner', status: 'Published', created: '2024-01-15' },
-    { id: 2, title: 'React Advanced', category: 'Programming', questions: 15, difficulty: 'Advanced', status: 'Draft', created: '2024-01-20' },
-    { id: 3, title: 'HTML & CSS', category: 'Web Development', questions: 25, difficulty: 'Intermediate', status: 'Published', created: '2024-01-10' },
-    { id: 4, title: 'Node.js Fundamentals', category: 'Backend', questions: 18, difficulty: 'Intermediate', status: 'Published', created: '2024-01-25' },
-  ]);
+  const [quizzes, setQuizzes] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [filters, setFilters] = useState({
+    search: '',
+    category: '',
+    difficulty: '',
+    status: ''
+  });
+
+  useEffect(() => {
+    fetchQuizzes();
+  }, [filters]);
+
+  const fetchQuizzes = async () => {
+    try {
+      setLoading(true);
+      const response = await adminQuizAPI.getAllQuizzes(filters);
+      setQuizzes(response.data.quizzes || []);
+    } catch (error) {
+      setError('Failed to fetch quizzes');
+      console.error('Error fetching quizzes:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleQuizAction = async (quizId, action) => {
+    try {
+      switch (action) {
+        case 'publish':
+          await adminQuizAPI.publishQuiz(quizId);
+          break;
+        case 'unpublish':
+          await adminQuizAPI.unpublishQuiz(quizId);
+          break;
+        case 'delete':
+          await adminQuizAPI.deleteQuiz(quizId);
+          break;
+        default:
+          return;
+      }
+      fetchQuizzes(); // Refresh the list
+    } catch (error) {
+      setError(`Failed to ${action} quiz`);
+      console.error(`Error ${action} quiz:`, error);
+    }
+  };
 
   return (
     <div className="space-y-6">

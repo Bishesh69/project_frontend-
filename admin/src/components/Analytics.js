@@ -1,6 +1,40 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { adminAnalyticsAPI } from '../services/api';
 
 const Analytics = () => {
+  const [userStats, setUserStats] = useState([]);
+  const [quizStats, setQuizStats] = useState([]);
+  const [systemStats, setSystemStats] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [dateRange, setDateRange] = useState({
+    startDate: '',
+    endDate: ''
+  });
+
+  useEffect(() => {
+    fetchAnalyticsData();
+  }, [dateRange]);
+
+  const fetchAnalyticsData = async () => {
+    try {
+      setLoading(true);
+      const [userResponse, quizResponse, systemResponse] = await Promise.all([
+        adminAnalyticsAPI.getUserStats(dateRange),
+        adminAnalyticsAPI.getQuizStats(dateRange),
+        adminAnalyticsAPI.getSystemStats()
+      ]);
+      
+      setUserStats(userResponse.data);
+      setQuizStats(quizResponse.data);
+      setSystemStats(systemResponse.data);
+    } catch (error) {
+      setError('Failed to fetch analytics data');
+      console.error('Error fetching analytics:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <div className="space-y-6">
       <h1 className="text-3xl font-bold text-gray-900">Analytics & Reports</h1>
